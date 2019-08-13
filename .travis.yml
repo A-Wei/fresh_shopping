@@ -1,0 +1,12 @@
+language: python
+
+services:
+- docker
+
+install:
+- docker-compose up
+
+script:
+- docker exec -it fresh_shopping_web_1 bash
+- cd .code
+- python manage.py test
