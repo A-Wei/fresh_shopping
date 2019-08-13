@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
 class Base:
     DEBUG = True
     HEROKU = os.getenv("HEROKU")
@@ -16,7 +17,7 @@ class Base:
             "PORT": 5432,
         }
     }
-    SECRET_KEY = os.environ("SECRET_KEY")
+    SECRET_KEY = os.getenv("SECRET_KEY")
 
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
     BASE_URL = "127.0.0.1:8000"
