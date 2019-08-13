@@ -4,9 +4,12 @@ services:
 - docker
 
 install:
-- docker-compose up
+- pip install codecov
 
 script:
-- docker exec -it fresh_shopping_web_1 bash
-- cd .code
-- python manage.py test
+- docker-compose up
+- coverage run manage.py test
+
+# Push the results back to codecov
+after_success:
+  - codecov
