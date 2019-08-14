@@ -15,6 +15,11 @@ django-tinymce = "==2.8.*"
 validate-email = "==1.3"
 py3dns = "==3.2.0"
 itsdangerous = "==1.1.*"
+celery = "==4.3.*"
+flower = "==0.9.*"
+redis = "==3.2.*"
+django-redis = "*"
+tinymce = "*"
 
 [requires]
 python_version = "3.7"

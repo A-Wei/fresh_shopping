@@ -18,10 +18,12 @@ class Base:
         }
     }
     SECRET_KEY = os.getenv("SECRET_KEY")
+    MESSAGE_BROKER = os.environ["MESSAGE_BROKER"]
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
     BASE_URL = "127.0.0.1:8000"
     CORS_ORIGIN_WHITELIST = ["http://localhost:3000"]
 

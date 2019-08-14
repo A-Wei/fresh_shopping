@@ -7,7 +7,7 @@ from user.models import User
 from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 from django.conf import settings
 from django.http import HttpResponse
-from django.core.mail import send_mail
+from celery_tasks.tasks import send_register_activation_email
 
 
 class RegisterView(TemplateView):
@@ -47,19 +47,7 @@ class RegisterView(TemplateView):
         token = serializer.dumps(info)
         token = token.decode('utf-8')
 
-        subject = "Welcome to Fresh Shopping"
-        html_message = "<h1>Message sent</h1>"
-        from_email = "<rsvp@163.com>"
-        recrecipient = user.email
-
-        send_mail(
-            subject=subject,
-            message="",
-            from_email=from_email,
-            recipient_list=[recrecipient],
-            fail_silently=False,
-            html_message=html_message,
-        )
+        send_register_activation_email.delay(email, username, token)
 
         return redirect(reverse('goods:index'))
 
