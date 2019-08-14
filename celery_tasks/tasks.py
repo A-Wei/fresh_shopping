@@ -7,22 +7,21 @@ from fresh_shopping.settings import BASE_URL
 
 @shared_task
 def send_register_activation_email(to_email, username, token):
-    subject = f"{ username }, Welcome to Fresh Shopping"
     html_message = loader.render_to_string(
             "activation.html",
             {
+                "username": username,
                 "base_url": str(BASE_URL),
                 "token": token,
             },
         )
-    from_email = "<rsvp@example.com>"
-    recrecipient = to_email
+    recipient = to_email
 
     send_mail(
-        subject=subject,
+        subject="Activate your email",
         message="",
-        from_email=from_email,
-        recipient_list=[recrecipient],
+        from_email="<rsvp@freshshopping.com>",
+        recipient_list=[recipient],
         fail_silently=False,
         html_message=html_message,
     )

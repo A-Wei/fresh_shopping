@@ -61,7 +61,7 @@ class ActivationView(TemplateView):
             user_id = info["confirm"]
 
             user = User.objects.get(id=user_id)
-            user.active = 1
+            user.is_active = 1
             user.save()
 
             return redirect(reverse('user:login'))
