@@ -7,6 +7,7 @@ from user.models import User
 from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 from django.conf import settings
 from django.http import HttpResponse
+from django.core.mail import send_mail
 
 
 class RegisterView(TemplateView):
@@ -30,7 +31,7 @@ class RegisterView(TemplateView):
             return render(request, 'register.html', { 'errmsg': 'Please agree terms'})
 
         try:
-            User.objects.get(username=username)
+            user = User.objects.get(username=username)
         except User.DoesNotExist:
             user = None
 
@@ -44,8 +45,21 @@ class RegisterView(TemplateView):
         serializer = TimedJSONWebSignatureSerializer(settings.SECRET_KEY, 300)
         info = {'confirm': user.id }
         token = serializer.dumps(info)
+        token = token.decode('utf-8')
 
-        # Use celey to send activation email
+        subject = "Welcome to Fresh Shopping"
+        html_message = "<h1>Message sent</h1>"
+        from_email = "<rsvp@163.com>"
+        recrecipient = user.email
+
+        send_mail(
+            subject=subject,
+            message="",
+            from_email=from_email,
+            recipient_list=[recrecipient],
+            fail_silently=False,
+            html_message=html_message,
+        )
 
         return redirect(reverse('goods:index'))
 
