@@ -89,6 +89,12 @@ WSGI_APPLICATION = 'fresh_shopping.wsgi.application'
 
 DATABASES = CONFIG.DATABASES
 
+# Django Caches settings
+CACHES = CONFIG.CACHES
+# Django session setting, save session in cache(redis).
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 AUTH_USER_MODEL='user.User'
 
 # Password validation
