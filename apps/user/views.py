@@ -8,7 +8,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 from django.conf import settings
 from django.http import HttpResponse
 from celery_tasks.tasks import send_register_activation_email
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class RegisterView(TemplateView):
@@ -88,7 +89,9 @@ class LoginView(TemplateView):
             if user.is_active:
                 login(request, user)
 
-                response = redirect(reverse('goods:index'))
+                redirect_to = request.GET.get('redirect_to', reverse('goods:index'))
+
+                response = redirect(redirect_to)
 
                 remember = request.POST.get('remember')
 
@@ -104,3 +107,23 @@ class LoginView(TemplateView):
 
         else:
             return render(request, 'login.html', { 'errmsg': 'Wrong password'})
+
+
+class LogoutView(TemplateView):
+    def get(self, request):
+        logout(request)
+
+        return redirect(reverse('goods:index'))
+
+
+class UserInfoView(LoginRequiredMixin, TemplateView):
+    template_name = 'user_center_info.html'
+    login_url = '/user/login'
+    redirect_field_name = 'redirect_to'
+
+class UserOrderView(LoginRequiredMixin, TemplateView):
+    template_name = 'user_center_order.html'
+
+
+class AddressView(LoginRequiredMixin, TemplateView):
+    template_name = 'user_center_site.html'
