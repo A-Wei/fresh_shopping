@@ -5,7 +5,7 @@
 {% block search_bar %}{% endblock search_bar %}
 {% block body %}
 	<div class="login_top clearfix">
-		<a href="index.html" class="login_logo"><img src="{% static 'images/logo02.png' %}"></a>
+		<a href="goods:index.html" class="login_logo"><img src="{% static 'images/logo02.png' %}"></a>
 	</div>
 	<div class="login_form_bg">
 		<div class="login_form_wrap clearfix">
@@ -14,10 +14,10 @@
 			<div class="login_form fr">
 				<div class="login_title clearfix">
 					<h1>用户登录</h1>
-					<a href="#">立即注册</a>
+					<a href="user:register.html">立即注册</a>
 				</div>
 				<div class="form_input">
-                    {# 不设置表单action时，提交表单时，会向浏览器地址栏中的地址提交数据 #}
+                    {# 不设置表单action时，提交表单时，会向浏览器地址栏中的 地址提交数据 #}
 					<form method="post">
                         {% csrf_token %}
 						<input type="text" name="username" class="name_input" value="{{ username }}" placeholder="请输入用户名">
