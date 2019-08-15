@@ -8,6 +8,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 from django.conf import settings
 from django.http import HttpResponse
 from celery_tasks.tasks import send_register_activation_email
+from django.contrib.auth import authenticate, login
 
 
 class RegisterView(TemplateView):
@@ -71,3 +72,35 @@ class ActivationView(TemplateView):
 
 class LoginView(TemplateView):
     template_name = 'login.html'
+
+    def post(self, request):
+        """Validate login credential"""
+
+        username = request.POST.get('username')
+        password = request.POST.get('pwd')
+
+        if not all([username, password]):
+            return render(request, 'login.html', { 'errmsg': 'Incomplete Data'})
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+
+                response = redirect(reverse('goods:index'))
+
+                remember = request.POST.get('remember')
+
+                if remember == 'on':
+                    response.set_cookie('username', username, max_age=7*24*3600)
+                else:
+                    response.delete_cookie('username')
+
+                return response
+
+            else:
+                return render(request, 'login.html', {'errmsg': 'User is not activated'})
+
+        else:
+            return render(request, 'login.html', { 'errmsg': 'Wrong password'})
