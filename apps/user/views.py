@@ -3,13 +3,14 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from validate_email import validate_email
 from django.views.generic import TemplateView
-from user.models import User
+from user.models import User, Address
 from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
 from django.conf import settings
 from django.http import HttpResponse
 from celery_tasks.tasks import send_register_activation_email
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django_redis import get_redis_connection
 
 
 class RegisterView(TemplateView):
@@ -121,9 +122,80 @@ class UserInfoView(LoginRequiredMixin, TemplateView):
     login_url = '/user/login'
     redirect_field_name = 'redirect_to'
 
+    def get(self, request):
+        user = request.user
+        address = Address.objects.get_default_address(user)
+
+        con = get_redis_connection('default')
+        history_key = f'history_{user.id}'
+
+        sku_ids = con.lrange(history_key, 0, 4) # [2,3,1]
+
+        # This way will make sure the products listed in "viewed" order, not "id" order.
+        goods_li = []
+        for id in sku_ids:
+            goods = GoodsSKU.objects.get(id=id)
+            goods_li.append(goods)
+
+        context = {'page':'user',
+                   'address':address,
+                   'goods_li':goods_li}
+
+        return render(request, 'user_center_info.html', context)
+
+
 class UserOrderView(LoginRequiredMixin, TemplateView):
     template_name = 'user_center_order.html'
 
 
 class AddressView(LoginRequiredMixin, TemplateView):
     template_name = 'user_center_site.html'
+
+    def get(self, request):
+        # Fetch the user from request
+        user = request.user
+
+        # Fetch user default address
+        address = Address.objects.get_default_address(user)
+
+        return render(request, 'user_center_site.html', {'page': 'address', 'address': address})
+
+    def post(self, request):
+        """Add new address"""
+        # Recive data
+        receiver = request.POST.get('receiver')
+        addr = request.POST.get('addr')
+        zip_code = request.POST.get('zip_code')
+        phone = request.POST.get('phone')
+
+        # Validate data
+        if not all([receiver, addr, phone]):
+            return render(request, 'user_center_site.html', {'errmsg': 'Data incomplete'})
+
+        # Validate phone number
+        if not re.match(r'^1[3|4|5|7|8][0-9]{9}$', phone):
+            return render(request, 'user_center_site.html', {'errmsg': 'Incorrect phone number'})
+
+        # If user already have a default address
+        # then new address will not be default, otherwise true
+        # Fetch the user from request
+        user = request.user
+
+        address = Address.objects.get_default_address(user)
+
+        if address:
+            is_default = False
+        else:
+            is_default = True
+
+        # Add address
+        Address.objects.create(
+            user=user,
+            receiver=receiver,
+            addr=addr,
+            zip_code=zip_code,
+            is_default=is_default,
+        )
+
+        # Return response, refresh address page
+        return redirect(reverse('user:address'))
