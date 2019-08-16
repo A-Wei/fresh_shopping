@@ -7,9 +7,30 @@
 		<div class="left_menu_con clearfix">
 			<h3>用户中心</h3>
 			<ul>
-				<li><a href="{% url 'user:user' %}" {% if request.resolver_match.url_name == "user" %} class="active" {% endif %}>· 个人信息</a></li>
-				<li><a href="{% url 'user:order' %}" {% if request.resolver_match.url_name == "order" %} class="active" {% endif %}>· 全部订单</a></li>
-				<li><a href="{% url 'user:address' %}" {% if request.resolver_match.url_name == "address" %} class="active" {% endif %}>· 收货地址</a></li>
+				<li>
+					<a href="{% url 'user:user' %}"
+						{% if request.resolver_match.url_name == "user" %}
+							class="active"
+						{% endif %}>
+						· 个人信息
+					</a>
+				</li>
+				<li>
+					<a href="{% url 'user:order' %}"
+						{% if request.resolver_match.url_name == "order" %}
+							class="active"
+						{% endif %}>
+						· 全部订单
+					</a>
+				</li>
+				<li>
+					<a href="{% url 'user:address' %}"
+						{% if page == "address" %}
+							class="active"
+						{% endif %}>
+						· 收货地址
+					</a>
+				</li>
 			</ul>
 		</div>
         {# 用户中心右侧内容块 #}

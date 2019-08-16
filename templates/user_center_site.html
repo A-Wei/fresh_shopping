@@ -7,7 +7,8 @@
 					<dl>
 						<dt>当前地址：</dt>
                         {% if address %}
-                            <dd><input type="radio" name="addr">
+                            <dd>
+								<input type="radio" name="addr">
                                 <label>
                                     {{ address.addr }} （{{ address.receiver }} 收）
                                     {{ address.phone }}
