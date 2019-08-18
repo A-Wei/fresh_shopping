@@ -78,7 +78,7 @@ class IndexTypeGoodsBanner(BaseModel):
 
 class IndexPromotionBanner(BaseModel):
     name = models.CharField(max_length=20)
-    url = models.URLField()
+    url = models.CharField(max_length=256)
     image = models.ImageField(upload_to='banner')
     index = models.SmallIntegerField(default=0)
 
