@@ -139,7 +139,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # 设置Django的文件存储类
-DEFAULT_FILE_STORAGE='utils.fdfs.storage.FDFSStorage'
+# DEFAULT_FILE_STORAGE='utils.fdfs.storage.FDFSStorage'
+DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage'
 
 # 设置fdfs使用的client.conf文件路径
 FDFS_CLIENT_CONF='./utils/fdfs/client.conf'

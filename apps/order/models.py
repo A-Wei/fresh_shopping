@@ -37,7 +37,7 @@ class OrderGoods(BaseModel):
     sku = models.ForeignKey('goods.GoodsSKU', on_delete=False)
     count = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    comment = models.CharField(max_length=256)
+    comment = models.CharField(max_length=256, default='')
 
     class Meta:
         db_table = 'fs_order_goods'

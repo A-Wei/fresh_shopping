@@ -15,16 +15,16 @@ services:
   #   command: tracker
   #   network_mode: host
   #   volumes:
-  #     - /var/fdfs/tracker:/var/fdfs
+  #     - .:/var/fdfs/tracker:/var/fdfs
   # storage0:
   #   container_name: storage0
   #   image: luhuiguo/fastdfs
   #   command: storage
   #   network_mode: host
   #   environment:
-  #     - TRACKER_SERVER=10.1.5.85:22122
+  #     - TRACKER_SERVER=localhost:22122
   #   volumes:
-  #     - /var/fdfs/storage0:/var/fdfs
+  #     - .:/var/fdfs/storage0:/var/fdfs
   # web:
   #   build: .
   #   command: bash -c "python /code/manage.py migrate --noinput && python /code/manage.py runserver 0.0.0.0:8000"
