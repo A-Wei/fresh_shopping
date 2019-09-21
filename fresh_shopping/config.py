@@ -20,10 +20,10 @@ class Base:
     SECRET_KEY = os.getenv("SECRET_KEY")
     MESSAGE_BROKER = os.environ["MESSAGE_BROKER"]
 
-    EMAIL_HOST = os.environ["EMAIL_HOST"]
-    EMAIL_PORT = os.environ["EMAIL_PORT"]
-    EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
-    EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+    # EMAIL_HOST = os.environ["EMAIL_HOST"]
+    # EMAIL_PORT = os.environ["EMAIL_PORT"]
+    # EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+    # EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
 
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 

@@ -31,10 +31,10 @@ DEBUG = CONFIG.DEBUG
 
 ALLOWED_HOSTS = CONFIG.ALLOWED_HOSTS
 
-EMAIL_HOST = CONFIG.EMAIL_HOST
-EMAIL_PORT = CONFIG.EMAIL_PORT
-EMAIL_HOST_USER = CONFIG.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = CONFIG.EMAIL_HOST_PASSWORD
+# EMAIL_HOST = CONFIG.EMAIL_HOST
+# EMAIL_PORT = CONFIG.EMAIL_PORT
+# EMAIL_HOST_USER = CONFIG.EMAIL_HOST_USER
+# EMAIL_HOST_PASSWORD = CONFIG.EMAIL_HOST_PASSWORD
 
 BASE_URL = CONFIG.BASE_URL
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'haystack',
     'tinymce',
     'user',
     'goods',
@@ -161,3 +162,16 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 CELERY_TIMEZONE = "Europe/Stockholm"
+
+# 全文检索框架配置
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        #使用Whoosh引擎
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        #搜索文件路径
+        'PATH': os.path.join(BASE_DIR, 'whoosh.index'),
+    }
+}
+
+#当添加、修改、删除数据时，自动生成索引
+HAYSTACK_SKIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

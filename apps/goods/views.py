@@ -120,7 +120,7 @@ class DetailView(TemplateView):
         return render(request, 'detail.html', context)
 
 
-class ListView(Template):
+class ListView(TemplateView):
     template_name = 'list.html'
 
     def get(self, request, type_id, page_id):

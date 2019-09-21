@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <title>Title</title>
+</head>
+<body>
+搜索的关键词是:{{ query }}<br>
+当前页的page对象：{{ page }}<br>
+<ul>
+    {% for item in page %}
+        <li>{ item }</li>
+    {% endfor %}
+</ul>
+分页的paginator对象
+</body>
+</html>
