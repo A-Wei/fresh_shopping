@@ -4,4 +4,5 @@ from order.views import OrderPlaceView, OrderCommitView, OrderPayView, CheckPayV
 urlpatterns = [
 
     path('place', OrderPlaceView.as_view(), name='place'), # 提交订单信息
+    path('commit', OrderCommitView.as_view(), name='commit'), # 订单创建
 ]
