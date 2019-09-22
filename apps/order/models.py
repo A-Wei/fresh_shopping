@@ -2,7 +2,7 @@ from django.db import models
 from db.base_model import BaseModel
 
 # Create your models here.
-class OrderInfo(models.Model):
+class OrderInfo(BaseModel):
     PAY_METHOD_CHOICES = (
         (0, "Pay on delivery"),
         (1, "WeChat Pay"),
