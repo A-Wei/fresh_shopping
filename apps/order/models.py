@@ -9,6 +9,13 @@ class OrderInfo(BaseModel):
         (2, "AliPay"),
         (3, "UniPay"),
     )
+    ORDER_STATUS = {
+        1:'To be paid',
+        2:'To be delivered',
+        3:'In transit',
+        4:'To be reviewed',
+        5:'Complete'
+    }
     ORDER_STATUS_CHOICES = (
         (0, 'To be paid'),
         (1, 'To be delivered'),

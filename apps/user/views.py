@@ -11,7 +11,8 @@ from celery_tasks.tasks import send_register_activation_email
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django_redis import get_redis_connection
-
+from order.models import OrderInfo
+from django.core.paginator import paginator
 
 class RegisterView(TemplateView):
     template_name = "register.html"
@@ -146,6 +147,58 @@ class UserInfoView(LoginRequiredMixin, TemplateView):
 
 class UserOrderView(LoginRequiredMixin, TemplateView):
     template_name = 'user_center_order.html'
+
+    def get(self, request, page):
+        user = request.user
+        orders = OrderInfo.objects.filter(user=user).order_by('-create_time')
+
+        for order in orders:
+            #根据order id 查询商品信息
+            order_skus = OrderGoods.objects.filter(order_id=order.id)
+
+            for order_sku in order_skus:
+                amount = order_sku.count * order_sku.price
+                # 动态给order_sku增加属性
+                order_sku.amount = amount
+
+            # 动态给order增加属性，保存订单状态标题
+            order.status_name = OrderInfo.ORDER_STATUS[order.order_status]
+            # 动态给order增加属性，保存订单商品的信息
+            order.order_skus = order_skus
+
+        # 分页
+        paginator = Paginator(orders, 1)
+
+        # 获取第page页的内容
+        try:
+            page = int(page)
+        except Exception:
+            page = 1
+
+        if page > paginator.num_pages:
+            page = 1
+
+        # 获取第page页的Page实例对象
+        order_page = paginator.page(page)
+
+        num_pages = paginator.num_pages
+
+        if num_pages < 5:
+            pages = range(1, num_pages + 1)
+        elif page <= 5:
+            pages = range(1,6)
+        elif num_pages - page <= 2:
+            pages = range(num_pages - 4, num_pages + 1)
+        else:
+            pages = range(page - 2, page + 3)
+
+        # 组织上下文
+        context = {'order_page':order_page,
+                   'pages':pages,
+                   'page': 'order'}
+
+        # 使用模板
+        return render(request, context)
 
 
 class AddressView(LoginRequiredMixin, TemplateView):
